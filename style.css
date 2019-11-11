@@ -1,0 +1,125 @@
+body {
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+
+}
+
+.bodyWrap {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.race {
+    /*height: 100vh;*/
+    width: 100%;
+    background: rgba(255, 0, 0, 0.31);
+    display: flex;
+    position: relative;
+    flex-direction: column;
+}
+
+.road {
+    border: 1px solid;
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    height: 80px;
+    position: relative;
+    background-color: #4A91C3;
+    display: flex;
+}
+
+.cars {
+    height: 70px;
+    bottom: 5px;
+    position: absolute;
+    display: flex;
+    justify-content: left;
+}
+
+.fuel {
+    margin-right: 10px;
+    font-size: 15px;
+    border: 1px solid green;
+    align-self: flex-end;
+    width: 10px;
+    height: 100%;
+    background-color: red;
+}
+
+.fuelValue {
+    position: absolute;
+    top: 0px;
+    font-size: 18px;
+}
+
+.car {
+    text-align: right;
+    bottom: 0px;
+    width: 70px;
+    height: 56px;
+    align-self: flex-end;
+    left: 10px;
+    background-image: url(imeges/car.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.trace {
+    display: flex;
+    align-self: flex-end;
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+    background-color: #ffcf39;
+    justify-content: space-around;
+}
+
+.inputNewCar {
+    display: flex;
+    justify-content: space-around;
+    margin-left: 10px;
+}
+
+.carInfoForm {
+    display: flex;
+    flex-direction: column;
+}
+
+.carInfoForm > p {
+    padding-bottom: 5px;
+    margin: 0px;
+    display: flex;
+    flex-direction: column;
+    border-bottom: 5px solid #cac884b5;
+}
+
+label {
+    margin-top: 10px;
+    width: 160px;
+    text-align: left;
+    float: left;
+    margin-right: 10px;
+}
+
+.acceptNewCar{
+    margin-top: 5px;
+}
+
+.inputDistance{
+    display: flex;
+    margin-left: 10px;
+}
+
+.start{
+    height: 85px;
+    flex-wrap: wrap;
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 15px;
+}

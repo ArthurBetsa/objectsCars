@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<link href="style.css" rel="stylesheet">
+	<script src="main.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="bodyWrap">
+
+	<!--cars block start-->
+
+	<div class="race">
+
+
+	</div>    <!--Race end-->
+
+	<!--Cars block end-->
+
+	<!--input new car block start-->
+
+	<div class="inputNewCar">
+		<!--carInfoForm start-->
+		<form class="carInfoForm" name="carInfoForm" action="">
+			<p>
+				<label for="CarName">Марка машины:</label>
+				<input class="inputCar" name="CarMark" id="CarName" type="text" placeholder="Марка машины"
+					   autocomplete="off">
+			</p>
+			<p>
+				<label for="CarСapacity">Скорость машины:</label>
+				<input class="inputCar" name="CarSpeed" id="CarSpeed" type="text" placeholder="Скорость"
+					   autocomplete="off">
+			</p>
+			<p>
+				<label for="CarСapacity">Объем бака машины:</label>
+
+				<input class="inputCar" name="CarCapacity" id="CarСapacity" type="text" placeholder="Объем бака"
+					   autocomplete="off">
+			</p>
+			<p>
+				<label for="carConsumption">Потребление топлива:</label>
+
+				<input class="inputCar" name="carConsumption" id="carConsumption" type="text"
+					   placeholder="Потребление топлива"
+					   autocomplete="off">
+			</p>
+			<input class="acceptNewCar" name="acceptNewCar" type="button" id="newCarAccept" value="Добавить">
+			<input class="acceptNewCar" name="clearCar" type="button" id="clearCar" value="Очистить">
+
+		</form> <!--carInfoForm end-->
+<div class="start">
+	<input class="acceptNewCar" name="startButton" type="button" id="startButton" value="Старт">
+	<input class="acceptNewCar" name="stopButton" type="button" id="stopButton" value="Стоп">
+	<input class="acceptNewCar" name="restartCar" type="button" id="restartCar" value="В начало">
+
+</div>
+
+		<!--carDistance start-->
+		<div class="inputDistance">
+			<form class="carInfoForm" name="carDistanceForm">
+				<p>
+					<label for="inputCarDistance">Дистанция пути</label>
+					<input class="inputCar" name="inputCarDistance" type="text" id="inputCarDistance" placeholder="км">
+				</p>
+				<input class="acceptNewCar" name="distanceAccept" type="button" id="distanceAccept" value="Принять">
+				<input class="acceptNewCar" name="distanceClear" type="button" id="distanceClear" value="Очистить">
+
+			</form>        <!--carDistance end-->
+
+		</div>
+	</div>
+
+	<!--input new car block end-->
+
+
+</div>    <!--bodyWrap end-->
+</body>
+</html>
