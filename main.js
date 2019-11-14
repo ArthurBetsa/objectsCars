@@ -1,22 +1,11 @@
 'use strict';
-//12313
 
-///
-///////////////////123123123123123123
-
-//vasya1
-
-////////////////123123123123
-
-
-//12312312312312
 class RacingTrace {
   constructor(distance) {
-    this.distance = distance || 10;
+    this.setDistance(distance || 10);
     this.cars = [];
-    this.startMove;
-    this.traceWidth;
-
+    this.startMove = null;
+    this.traceWidth = null;
   }
 
   addCar(car) {
@@ -32,14 +21,24 @@ class RacingTrace {
     document.querySelector(".race").innerHTML = "";
   }
 
+  setDistance(distance) {
+    this.distance = distance;
+  }
+
   start(traceWidth) {
     this.traceWidth = traceWidth;
-  console.log(this.distance);
+    console.log(this.distance);
     this.startMove = setInterval(() => {
+      if (!this.cars.filter(car => !car.isFinished())) {
+        this.stop();
+      }
+
       this.cars.forEach(car => {
-        if (document.querySelector(`#car_${car.id}`) != null) {
-           car.move();
+        if(!car.isFinished()) {
+          if (document.querySelector(`#car_${car.id}`) != null) {
+            car.move();
           }
+        }
 
       })
     }, 1000);
@@ -54,7 +53,7 @@ class RacingTrace {
     this.cars.forEach(car => {
       this.stop();
       car.position = 0;
-      document.querySelector(`#car_${car.id}`).style.left = "0px";
+      document.querySelector(`#car_${car.id}`).style.left = "0%";
       document.querySelector("#startButton").disabled = false;
 
     });
@@ -65,12 +64,11 @@ class RacingTrace {
 class Car {
   constructor(mark, speed, capacity, consumption) {
     this.mark = mark || "жигуль";
-    this.speed = speed || 100;
+    this.speed = speed*0.0001 || 0.01;
     this.capacity = capacity || 50;
     this.consumption = consumption || 10;
     this.id = `f${(~~(Math.random() * 1e8)).toString(16)}`;
     this.position = 0;
-
 
 
   }
@@ -79,14 +77,17 @@ class Car {
 
     this.position += this.speed;
     this.capacity -= this.consumption / this.speed;
-    if(this.position+92>racingTrace.traceWidth){
-      racingTrace.stop();
-      this.position =this.position-130;
+    // if (this.position + 92 > racingTrace.traceWidth) {
+    //   racingTrace.stop();
+    //   this.position = this.position - 130;
+    // }
 
-    }
+    document.querySelector(`#car_${this.id}`).style.left = this.position + "%";
 
-      document.querySelector(`#car_${this.id}`).style.left = this.position + "px";
+  }
 
+  isFinished(){
+    return (this.position + this.speed) > racingTrace.traceWidth;
   }
 }
 
@@ -109,7 +110,7 @@ class RenderingCar {
        <div class="aboutCar">
        <span>${this.car.mark}: ${this.car.speed} km/h, V:${this.car.capacity}L, ${this.car.consumption}L per 100km </span>
        </div>
-		<div class="distance">${this.race.distance} km</div>
+		<div class="distance"><span>${this.race.distance}</span> km</div>
 		</div>
 		</div>`;
     document.querySelector(".race").innerHTML += carHtml;
@@ -117,11 +118,7 @@ class RenderingCar {
 }
 
 
-
-
 let racingTrace = new RacingTrace();
-
-
 
 
 window.addEventListener("load", () => {
@@ -141,7 +138,7 @@ window.addEventListener("load", () => {
   document.querySelector("#startButton").addEventListener("click", () => {
     // document.querySelector("#startButton").disabled = true;
     let traceWidth = document.querySelector(".road").clientWidth;
-    racingTrace.stop()
+    racingTrace.stop();
     racingTrace.start(traceWidth)
   }, false);
 
@@ -158,12 +155,13 @@ window.addEventListener("load", () => {
 
   let b = document.carDistanceForm.distanceAccept;
 
-  b.addEventListener("click",()=>{
+  b.addEventListener("click", () => {
     let distance = document.carDistanceForm.inputCarDistance.value;
-    let a = document.querySelectorAll(".distance").forEach(item=>{item.innerHTML = distance});
-    racingTrace = new RacingTrace(distance);
-    distance = "";
-  },false)
+    let a = document.querySelectorAll(".distance > span").forEach(item => {
+      item.innerHTML = distance
+    });
+    racingTrace.setDistance(distance);
+  }, false)
 
 
 }, false);//end of window.eventLestener
@@ -206,7 +204,6 @@ function setDefault() {
 
 
 }
-
 
 
 //

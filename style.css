@@ -63,7 +63,7 @@ body {
     height: 56px;
     align-self: flex-end;
     left: 10px;
-    background-image: url(imeges/car.png);
+    background-image: url(images/car.png);
     background-repeat: no-repeat;
     background-size: cover;
 }
