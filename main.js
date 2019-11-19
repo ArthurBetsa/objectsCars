@@ -2,9 +2,8 @@
 
 class RacingTrace {
   constructor(distance) {
-    this.setDistance(distance || 10);
     this.cars = [];
-    this.startMove = null;
+    this.setDistance(distance || 10);
     this.traceWidth = null;
   }
 
@@ -23,29 +22,31 @@ class RacingTrace {
 
   setDistance(distance) {
     this.distance = distance;
+
+
   }
 
   start(traceWidth) {
-    this.traceWidth = traceWidth;
-    console.log(this.distance);
-    this.startMove = setInterval(() => {
-      if (!this.cars.filter(car => !car.isFinished())) {
-        this.stop();
+
+    this.cars.forEach(car => {
+      if (document.querySelector(`#car_${car.id}`) != null) {
+        car.carMoving = setInterval(() => {
+          car.move();
+          if(car.isFinished()){
+            clearInterval(car.carMoving);
+          }
+          }, 10);
       }
 
-      this.cars.forEach(car => {
-        if(!car.isFinished()) {
-          if (document.querySelector(`#car_${car.id}`) != null) {
-            car.move();
-          }
-        }
+    });
 
-      })
-    }, 1000);
+
+
   }
 
   stop() {
-    clearInterval(this.startMove);
+      this.cars.forEach(car => clearInterval(car.carMoving));
+      this.cars.forEach(car => console.log(car.carMoving));
   }
 
   restart() {
@@ -64,7 +65,7 @@ class RacingTrace {
 class Car {
   constructor(mark, speed, capacity, consumption) {
     this.mark = mark || "жигуль";
-    this.speed = speed*0.0001 || 0.01;
+    this.speed = speed * 0.01 || 1;
     this.capacity = capacity || 50;
     this.consumption = consumption || 10;
     this.id = `f${(~~(Math.random() * 1e8)).toString(16)}`;
@@ -74,20 +75,17 @@ class Car {
   }
 
   move() {
-
-    this.position += this.speed;
+    this.position += this.speed / racingTrace.distance;
     this.capacity -= this.consumption / this.speed;
-    // if (this.position + 92 > racingTrace.traceWidth) {
-    //   racingTrace.stop();
-    //   this.position = this.position - 130;
-    // }
+
 
     document.querySelector(`#car_${this.id}`).style.left = this.position + "%";
 
   }
 
-  isFinished(){
-    return (this.position + this.speed) > racingTrace.traceWidth;
+  isFinished() {
+    return this.position > 80;  //racingTrace.traceWidth;
+
   }
 }
 
@@ -161,6 +159,7 @@ window.addEventListener("load", () => {
       item.innerHTML = distance
     });
     racingTrace.setDistance(distance);
+
   }, false)
 
 
