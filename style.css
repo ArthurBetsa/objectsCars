@@ -49,7 +49,10 @@ body {
     height: 100%;
     background-color: red;
 }
-
+.fuel > span{
+    position: absolute;
+    top: 0px;
+}
 .fuelValue {
     position: absolute;
     top: 0px;
