@@ -30,33 +30,39 @@ class RacingTrace {
 
     this.cars.forEach(car => {
       if (document.querySelector(`#car_${car.id}`) != null) {
+        car.spended = 0;
+
         car.carMoving = setInterval(() => {
+
           car.move();
-          if(car.isFinished()){
+          if (car.isFinished()) {
+            console.log(car.mark + ": " + car.spended + "  pos: " + car.position);
+            console.log(car.lace);
             clearInterval(car.carMoving);
           }
-          }, 10);
+        }, 10);
       }
 
     });
 
 
-
   }
 
   stop() {
-      this.cars.forEach(car => clearInterval(car.carMoving));
-      this.cars.forEach(car => console.log(car.carMoving));
+    this.cars.forEach(car => clearInterval(car.carMoving));
+    this.cars.forEach(car => {
+      console.log(car.mark + ": " + car.spended);
+
+    });
+
   }
 
   restart() {
+    this.stop();
 
     this.cars.forEach(car => {
-      this.stop();
       car.position = 0;
       document.querySelector(`#car_${car.id}`).style.left = "0%";
-      document.querySelector("#startButton").disabled = false;
-
     });
   }
 }
@@ -65,21 +71,27 @@ class RacingTrace {
 class Car {
   constructor(mark, speed, capacity, consumption) {
     this.mark = mark || "жигуль";
-    this.speed = speed * 0.01 || 1;
+    // this.speed = speed * 0.01 || 1;
+    this.speed = speed || 100;
     this.capacity = capacity || 50;
     this.consumption = consumption || 10;
     this.id = `f${(~~(Math.random() * 1e8)).toString(16)}`;
     this.position = 0;
-
+    this.spended = null;
+    this.lace = 0;
+    this.pased = 0;
 
   }
 
   move() {
-    this.position += this.speed / racingTrace.distance;
+    this.position += this.speed / (racingTrace.distance * 100);
     this.capacity -= this.consumption / this.speed;
-
+    this.spended = (((this.consumption / (racingTrace.distance))));
+    this.lace++;
+    this.pased += this.position/8;
 
     document.querySelector(`#car_${this.id}`).style.left = this.position + "%";
+    document.querySelector(`#car_${this.id}> .car > span`).innerHTML = this.position/8 ;
 
   }
 
@@ -102,7 +114,7 @@ class RenderingCar {
        <div class="cars" id="car_${this.car.id}">
        <div  class="fuelValue"></div>
        <div class="fuel">10%</div>
-       <div  class="car">0</div>
+       <div  class="car"><span>0</span></div>
        </div>
        <div class="trace">
        <div class="aboutCar">
@@ -151,16 +163,15 @@ window.addEventListener("load", () => {
   document.querySelector("#restartCar").addEventListener("click", () => racingTrace.restart(), false);
 //trace width
 
-  let b = document.carDistanceForm.distanceAccept;
+  document.carDistanceForm.distanceAccept
+    .addEventListener("click", () => {
+      let distance = document.carDistanceForm.inputCarDistance.value;
+      document.querySelectorAll(".distance > span").forEach(item => {
+        item.innerHTML = distance
+      });
+      racingTrace.setDistance(distance);
 
-  b.addEventListener("click", () => {
-    let distance = document.carDistanceForm.inputCarDistance.value;
-    let a = document.querySelectorAll(".distance > span").forEach(item => {
-      item.innerHTML = distance
-    });
-    racingTrace.setDistance(distance);
-
-  }, false)
+    }, false)
 
 
 }, false);//end of window.eventLestener
@@ -193,9 +204,9 @@ window.addEventListener("load", setDefault, false);
 
 function setDefault() {
 
-  let car1 = new Car("Mercedes", 150, 60, 10);
+  let car1 = new Car("Mercedes", 150, 60, 100);
   racingTrace.addCar(car1);
-  let car2 = new Car("Ferrari", 100, 120, 60);
+  let car2 = new Car("Ferrari", 150, 120, 60);
   racingTrace.addCar(car2);
 
   let car3 = new Car("Porshe", 80, 120, 60);
