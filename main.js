@@ -36,7 +36,7 @@ class RacingTrace {
         car.carMoving = setInterval(() => {
 
           car.move();
-          if (car.isFinished()) {
+          if (car.isFinished() == true || car.left <= 0.5 ) {   //!Warning!!! Вопрос! Непонятно почему || а не &&
             clearInterval(car.carMoving);
           }
         }, 1);
@@ -48,8 +48,7 @@ class RacingTrace {
 
   stop() {
     this.cars.forEach(car => clearInterval(car.carMoving));
-    this.cars.forEach(car => {
-    });
+
 
   }
 
