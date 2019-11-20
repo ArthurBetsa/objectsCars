@@ -96,7 +96,7 @@ class Car {
   }
 
   isFinished() {
-    return this.position > 80;  //racingTrace.traceWidth;
+    return this.position > 80;  // //racingTrace.traceWidth;
 
   }
 }
