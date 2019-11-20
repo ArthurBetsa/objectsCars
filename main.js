@@ -28,6 +28,7 @@ class RacingTrace {
 
   start(traceWidth) {
 
+
     this.cars.forEach(car => {
       if (document.querySelector(`#car_${car.id}`) != null) {
         car.spended = 0;
@@ -36,13 +37,10 @@ class RacingTrace {
 
           car.move();
           if (car.isFinished()) {
-            console.log(car.mark + ": " + car.spended + "  pos: " + car.position);
-            console.log(car.lace);
             clearInterval(car.carMoving);
           }
-        }, 10);
+        }, 1);
       }
-
     });
 
 
@@ -51,8 +49,6 @@ class RacingTrace {
   stop() {
     this.cars.forEach(car => clearInterval(car.carMoving));
     this.cars.forEach(car => {
-      console.log(car.mark + ": " + car.spended);
-
     });
 
   }
@@ -76,27 +72,28 @@ class Car {
     this.capacity = capacity || 50;
     this.consumption = consumption || 10;
     this.id = `f${(~~(Math.random() * 1e8)).toString(16)}`;
-    this.position = 0;
-    this.spended = null;
-    this.lace = 0;
-    this.pased = 0;
+    this.position = null;
+    this.pased = null;
+    this.spent = null;
+    this.left = null;
 
   }
 
   move() {
-    this.position += this.speed / (racingTrace.distance * 100);
-    this.capacity -= this.consumption / this.speed;
-    this.spended = (((this.consumption / (racingTrace.distance))));
-    this.lace++;
-    this.pased += this.position/8;
+    this.position += this.speed / (racingTrace.distance * 10);
+    this.pased = ((this.position / 8.5) * (racingTrace.distance / 10));
+    this.spent = (this.pased * (this.consumption / 100));
+    this.left = this.capacity - this.spent;
+
 
     document.querySelector(`#car_${this.id}`).style.left = this.position + "%";
-    document.querySelector(`#car_${this.id}> .car > span`).innerHTML = this.position/8 ;
-
+    document.querySelector(`#car_${this.id} > .fuel`).style.height = `${100 * (this.left / this.capacity)}%`;
+    document.querySelector(`#car_${this.id}> .car > span`).innerHTML = Math.floor(this.pased);
+    document.querySelector(`#car_${this.id}> .fuel > span`).innerHTML = `${Math.floor(100 * (this.left / this.capacity))}%`;
   }
 
   isFinished() {
-    return this.position > 80;  //racingTrace.traceWidth;
+    return this.position > 85;  //racingTrace.traceWidth;
 
   }
 }
@@ -113,8 +110,8 @@ class RenderingCar {
     let carHtml = `<div class="road">
        <div class="cars" id="car_${this.car.id}">
        <div  class="fuelValue"></div>
-       <div class="fuel">10%</div>
-       <div  class="car"><span>0</span></div>
+       <div class="fuel"><span>100%</span></div>
+       <div  class="car"><span>0</span>km</div>
        </div>
        <div class="trace">
        <div class="aboutCar">
