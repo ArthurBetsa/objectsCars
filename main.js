@@ -157,7 +157,11 @@ window.addEventListener("load", () => {
 
   document.carDistanceForm.distanceAccept
     .addEventListener("click", () => {
-      racingTrace.setDistance();
+      let distance = document.carDistanceForm.inputCarDistance.value;
+      document.querySelectorAll(".distance > span").forEach(item => {
+        item.innerHTML = distance
+      });
+      racingTrace.setDistance(distance);
 
     }, false)
 
@@ -172,7 +176,7 @@ function setNewCar() {
   let carСapacity = document.carInfoForm.CarCapacity.value;
   let carConsumption = document.carInfoForm.carConsumption.value;
   let car = new Car(
-    carMark,  // document.carInfoForm.CarMark.value,  //another way how can it be/
+    carMark,  // document.carInfoForm.CarMark.value,  //another way how can it be//
     carSpeed,
     carСapacity,
     carConsumption
