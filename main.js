@@ -3,8 +3,7 @@
 class RacingTrace {
   constructor(distance) {
     this.cars = [];
-    this.setDistance(distance || 10);
-    this.traceWidth = null;
+    this.setDistance(distance || 100);
   }
 
   addCar(car) {
@@ -26,7 +25,7 @@ class RacingTrace {
 
   }
 
-  start(traceWidth) {
+  start() {
 
 
     this.cars.forEach(car => {
@@ -36,10 +35,10 @@ class RacingTrace {
         car.carMoving = setInterval(() => {
 
           car.move();
-          if (car.isFinished() == true || car.left <= 0.5 ) {   //!Warning!!! Вопрос! Непонятно почему || а не &&
+          if (car.isFinished() || car.left <= 0.5 ) {   //!Warning!!! Вопрос! Непонятно почему || а не &&
             clearInterval(car.carMoving);
           }
-        }, 1);
+        }, 10);
       }
     });
 
@@ -66,7 +65,6 @@ class RacingTrace {
 class Car {
   constructor(mark, speed, capacity, consumption) {
     this.mark = mark || "жигуль";
-    // this.speed = speed * 0.01 || 1;
     this.speed = speed || 100;
     this.capacity = capacity || 50;
     this.consumption = consumption || 10;
@@ -87,7 +85,7 @@ class Car {
 
     document.querySelector(`#car_${this.id}`).style.left = this.position + "%";
     document.querySelector(`#car_${this.id} > .fuel`).style.height = `${100 * (this.left / this.capacity)}%`;
-    document.querySelector(`#car_${this.id}> .car > span`).innerHTML = Math.floor(this.pased);
+    document.querySelector(`#car_${this.id}> .car > span`).innerHTML = `${Math.floor(this.pased)}`;
     document.querySelector(`#car_${this.id}> .fuel > span`).innerHTML = `${Math.floor(100 * (this.left / this.capacity))}%`;
   }
 
@@ -142,7 +140,6 @@ window.addEventListener("load", () => {
 
   //start move
   document.querySelector("#startButton").addEventListener("click", () => {
-    // document.querySelector("#startButton").disabled = true;
     let traceWidth = document.querySelector(".road").clientWidth;
     racingTrace.stop();
     racingTrace.start(traceWidth)
@@ -150,7 +147,6 @@ window.addEventListener("load", () => {
 
   // stop
   document.querySelector("#stopButton").addEventListener("click", () => {
-    // document.querySelector("#startButton").disabled = false;
     racingTrace.stop()
   }, false);
 
@@ -161,11 +157,7 @@ window.addEventListener("load", () => {
 
   document.carDistanceForm.distanceAccept
     .addEventListener("click", () => {
-      let distance = document.carDistanceForm.inputCarDistance.value;
-      document.querySelectorAll(".distance > span").forEach(item => {
-        item.innerHTML = distance
-      });
-      racingTrace.setDistance(distance);
+      racingTrace.setDistance();
 
     }, false)
 
@@ -180,7 +172,7 @@ function setNewCar() {
   let carСapacity = document.carInfoForm.CarCapacity.value;
   let carConsumption = document.carInfoForm.carConsumption.value;
   let car = new Car(
-    carMark,  // document.carInfoForm.CarMark.value,
+    carMark,  // document.carInfoForm.CarMark.value,  //another way how can it be/
     carSpeed,
     carСapacity,
     carConsumption
@@ -188,7 +180,7 @@ function setNewCar() {
   racingTrace.addCar(car);
 
 
-//очистка формы;
+//to cleat new car input;
   document.querySelectorAll(".inputCar").forEach(input => {
     input.value = "";
   });
@@ -212,4 +204,3 @@ function setDefault() {
 }
 
 
-//
