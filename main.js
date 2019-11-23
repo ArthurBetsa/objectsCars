@@ -1,41 +1,42 @@
 'use strict';
 
+class Warnings {
+  renderWarning(div) {
+    this.div = div;
+    this.parent = document.querySelector(`#${this.div.id}`).parentElement;
+    this.warning = document.createElement("div");
+    this.warning.setAttribute("class", "warnings");
+    this.parent.appendChild(this.warning).innerHTML = ` параметр ${this.div.placeholder} должно быть число больше 0`;
+  }
+  clearWarning() {
+    document.querySelectorAll(".warnings").forEach(item => item.remove());
+  }
+}
+
 class RacingTrace {
   constructor(distance) {
     this.cars = [];
     this.setDistance(distance || 100);
   }
-
   addCar(car) {
     this.cars.push(car);
-
     let renderer = new RenderingCar(this, car);
     renderer.drawningCar();
-
   }
-
   reset() {
     this.cars = [];
     document.querySelector(".race").innerHTML = "";
   }
-
   setDistance(distance) {
     this.distance = distance;
-
-
   }
-
   start() {
-
-
     this.cars.forEach(car => {
       if (document.querySelector(`#car_${car.id}`) != null) {
         car.spended = 0;
-
         car.carMoving = setInterval(() => {
-
           car.move();
-          if (car.isFinished() || car.left <= 0.5 ) {   //!Warning!!! Вопрос! Непонятно почему || а не &&
+          if (car.isFinished() || car.left <= 0.1) {   //!Warning!!! Вопрос! Непонятно почему || а не &&
             clearInterval(car.carMoving);
           }
         }, 10);
@@ -47,13 +48,9 @@ class RacingTrace {
 
   stop() {
     this.cars.forEach(car => clearInterval(car.carMoving));
-
-
   }
-
   restart() {
     this.stop();
-
     this.cars.forEach(car => {
       car.position = 0;
       document.querySelector(`#car_${car.id}`).style.left = "0%";
@@ -73,7 +70,6 @@ class Car {
     this.pased = null;
     this.spent = null;
     this.left = null;
-
   }
 
   move() {
@@ -81,28 +77,21 @@ class Car {
     this.pased = ((this.position / 8.5) * (racingTrace.distance / 10));
     this.spent = (this.pased * (this.consumption / 100));
     this.left = this.capacity - this.spent;
-
-
     document.querySelector(`#car_${this.id}`).style.left = this.position + "%";
     document.querySelector(`#car_${this.id} > .fuel`).style.height = `${100 * (this.left / this.capacity)}%`;
     document.querySelector(`#car_${this.id}> .car > span`).innerHTML = `${Math.floor(this.pased)}`;
     document.querySelector(`#car_${this.id}> .fuel > span`).innerHTML = `${Math.floor(100 * (this.left / this.capacity))}%`;
   }
-
   isFinished() {
     return this.position > 85;  //racingTrace.traceWidth;
-
   }
 }
-
 
 class RenderingCar {
   constructor(race, car) {
     this.race = race;
     this.car = car;
   }
-
-
   drawningCar() {
     let carHtml = `<div class="road">
        <div class="cars" id="car_${this.car.id}">
@@ -121,28 +110,23 @@ class RenderingCar {
   }
 }
 
-
 let racingTrace = new RacingTrace();
+let warningMessage = new Warnings();
 
 
 window.addEventListener("load", () => {
-
   //set new Car
   document.querySelector("#newCarAccept").addEventListener("click", setNewCar, false);
-
   //clear race
   document.querySelector("#clearCar").addEventListener("click", () => {
     racingTrace.reset();
-
-
+    warningMessage.clearWarning();
   }, false);
-
 
   //start move
   document.querySelector("#startButton").addEventListener("click", () => {
-    let traceWidth = document.querySelector(".road").clientWidth;
     racingTrace.stop();
-    racingTrace.start(traceWidth)
+    racingTrace.start()
   }, false);
 
   // stop
@@ -151,37 +135,62 @@ window.addEventListener("load", () => {
   }, false);
 
   //restart
-
   document.querySelector("#restartCar").addEventListener("click", () => racingTrace.restart(), false);
-//trace width
 
+  //trace width
   document.carDistanceForm.distanceAccept
     .addEventListener("click", () => {
-      let distance = document.carDistanceForm.inputCarDistance.value;
-      document.querySelectorAll(".distance > span").forEach(item => {
-        item.innerHTML = distance
-      });
-      racingTrace.setDistance(distance);
+      let distance = document.carDistanceForm.inputCarDistance;
+
+      if(Number.isInteger(distance.value) || distance.value > 0) {
+        document.querySelectorAll(".distance > span").forEach(item => {
+          item.innerHTML = distance.value;
+        });
+        racingTrace.setDistance(distance.value);
+        racingTrace.restart();
+        warningMessage.clearWarning();
+
+
+      }else {
+        warningMessage.clearWarning();
+        warningMessage.renderWarning(distance);
+      }
 
     }, false)
 
-
 }, false);//end of window.eventLestener
 
-
+//create New car
 function setNewCar() {
+  let carMark = document.carInfoForm.CarMark;
+  let carSpeed = document.carInfoForm.CarSpeed;
+  let carCapacity = document.carInfoForm.CarCapacity;
+  let carConsumption = document.carInfoForm.carConsumption;
 
-  let carMark = document.carInfoForm.CarMark.value;
-  let carSpeed = document.carInfoForm.CarSpeed.value * 1;
-  let carСapacity = document.carInfoForm.CarCapacity.value;
-  let carConsumption = document.carInfoForm.carConsumption.value;
-  let car = new Car(
-    carMark,  // document.carInfoForm.CarMark.value,  //another way how can it be//
-    carSpeed,
-    carСapacity,
-    carConsumption
-  );
-  racingTrace.addCar(car);
+  let success = true;
+  warningMessage.clearWarning();
+
+  if (!Number.isInteger(carSpeed.value * 1) || carSpeed.value <   0) {
+    warningMessage.renderWarning(carSpeed);
+    success = false;
+  }
+  if (!Number.isInteger(carCapacity.value * 1) || carCapacity.value < 0) {
+    warningMessage.renderWarning(carCapacity);
+    success = false;
+  }
+  if (!Number.isInteger(carConsumption.value * 1) || carConsumption.value < 0) {
+    warningMessage.renderWarning(carConsumption);
+    success = false;
+  }
+  if (success) {
+    let car = new Car(
+      carMark.value,  // document.carInfoForm.CarMark.value,  //another way how can it be//
+      carSpeed.value,
+      carCapacity.value,
+      carConsumption.value
+    );
+    racingTrace.addCar(car);
+  }
 
 
 //to cleat new car input;
@@ -195,16 +204,12 @@ function setNewCar() {
 window.addEventListener("load", setDefault, false);
 
 function setDefault() {
-
   let car1 = new Car("Mercedes", 150, 60, 100);
   racingTrace.addCar(car1);
   let car2 = new Car("Ferrari", 150, 120, 60);
   racingTrace.addCar(car2);
-
   let car3 = new Car("Porshe", 80, 120, 60);
   racingTrace.addCar(car3);
-
-
 }
 
 

@@ -49,10 +49,12 @@ body {
     height: 100%;
     background-color: red;
 }
-.fuel > span{
+
+.fuel > span {
     position: absolute;
     top: 0px;
 }
+
 .fuelValue {
     position: absolute;
     top: 0px;
@@ -93,6 +95,7 @@ body {
 }
 
 .carInfoForm > p {
+    position: relative;
     padding-bottom: 5px;
     margin: 0px;
     display: flex;
@@ -108,16 +111,16 @@ label {
     margin-right: 10px;
 }
 
-.acceptNewCar{
+.acceptNewCar {
     margin-top: 5px;
 }
 
-.inputDistance{
+.inputDistance {
     display: flex;
     margin-left: 10px;
 }
 
-.start{
+.start {
     height: 85px;
     flex-wrap: wrap;
     width: 150px;
@@ -125,4 +128,32 @@ label {
     flex-direction: column;
     justify-content: center;
     margin-top: 15px;
+}
+
+@keyframes warn {
+    0% {
+        background-color: rgba(252, 16, 35, 0.32);
+
+    }
+    25% {
+        background-color: rgba(252, 16, 35, 0.66);
+    }
+    50% {
+        background-color: rgb(252, 16, 35);
+    }
+    75% {
+        background-color: rgba(252, 16, 35, 0.66);
+    }
+    100% {
+        background-color: rgba(252, 16, 35, 0.32);
+    }
+
+}
+
+.warnings {
+    position: relative;
+    bottom: 0px;
+    overflow: visible;
+    animation: warn 4s;
+    background-color: rgba(252, 16, 35, 0.32);
 }
